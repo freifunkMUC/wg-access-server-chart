@@ -7,7 +7,11 @@ config:
 
 web:
   config:
-    adminUsername: "admin"
+    existingSecret: ""
+    secretRefKeys:
+      adminUsername: "adminUsername"
+      adminPassword: "adminPassword"
+    adminUsername: ""
     adminPassword: ""
   service:
     annotations: {}
@@ -17,6 +21,9 @@ web:
 
 wireguard:
   config:
+    existingSecret: ""
+    secretRefKeys:
+      privateKey: "privateKey"
     privateKey: ""
   service:
     annotations: {}
@@ -27,6 +34,13 @@ wireguard:
     loadBalancerIP: ""
     port: 51820
     nodePort: ""
+
+postgresql:
+  enabled: false
+  uri: ""
+  #existingSecret: ""
+  secretRefKeys:
+    uri: "postgresqlUri"
 
 persistence:
   enabled: false
