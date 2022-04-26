@@ -59,6 +59,7 @@ persistence:
   storageClass: ""
   size: 100Mi
 
+initContainers: []
 
 ingress:
   enabled: false
