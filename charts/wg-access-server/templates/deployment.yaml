@@ -28,10 +28,26 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.initContainers }}
+    {{- if or (or .Values.secretConfig.config .Values.secretConfig.existingSecret) (.Values.initContainers)}}
       initContainers:
-        {{- toYaml . | nindent 8 }}
     {{- end }}
+      {{- if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}
+        - name: merge-config
+          image: mikefarah/yq
+          command: ["sh", "-c", "yq '. *= load(\"/secretConfig.yaml\")' /config.yaml > /mergedConfig/config.yaml ",]
+          volumeMounts:
+            - mountPath: /mergedConfig
+              name: merged-config
+            - mountPath: /config.yaml
+              subPath: config.yaml
+              name: config
+            - mountPath: /secretConfig.yaml
+              subPath: secretConfig.yaml
+              name: secret-config
+      {{- end }}
+      {{- with .Values.initContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -54,6 +70,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "wg-access-server.wireguardConfigSecretName" . | quote }}
                   key: {{ .Values.wireguard.config.secretRefKeys.privateKey }}
+            {{- if .Values.web.config.basicAuthEnabled }}
             - name: WG_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -64,6 +81,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "wg-access-server.webConfigSecretName" . | quote }}
                   key: {{ .Values.web.config.secretRefKeys.adminPassword }}
+            {{- end }}
             - name: WG_STORAGE
               {{- if .Values.postgresql.enabled }}
               valueFrom:
@@ -80,9 +98,12 @@ spec:
             - name: data
               mountPath: /data
             {{- end }}
-            - name: config
+            - name: {{ if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}merged-config{{ else }}config{{ end }}
               mountPath: /config.yaml
               subPath: config.yaml
+          {{- with .Values.extraVolumeMounts }}
+            {{- tpl ( . | toYaml ) $ | nindent 12 }}
+          {{- end}}
           readinessProbe:
             httpGet:
               path: /
@@ -106,6 +127,17 @@ spec:
         - name: config
           configMap:
             name: "{{ $fullName }}"
+        - name: secret-config
+          secret:
+            secretName: {{ include "wg-access-server.secretConfigSecretName" . | quote }}
+            items:
+              - key: {{ .Values.secretConfig.secretRefKeys.config }}
+                path: secretConfig.yaml
+        - name: merged-config
+          emptyDir: {}
+      {{- with .Values.extraVolumes }}
+        {{- tpl ( . | toYaml ) $ | nindent 8 }}
+      {{- end}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

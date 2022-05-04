@@ -114,3 +114,15 @@ Return WireGuard Config Secret Name
     {{- include "wg-access-server.fullname" . -}}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Return WireGuard secretConfig Secret Name
+*/}}
+{{- define "wg-access-server.secretConfigSecretName" -}}
+{{- if .Values.secretConfig.existingSecret -}}
+    {{- .Values.secretConfig.existingSecret -}}
+{{- else -}}
+    {{- include "wg-access-server.fullname" . -}}
+{{- end -}}
+{{- end -}}

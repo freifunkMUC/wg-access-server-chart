@@ -5,14 +5,22 @@ config:
   vpn:
     cidrv6: 0
 
+secretConfig:
+  config: {}
+  existingSecret: ""
+  secretRefKeys:
+    config: "secretConfig"
+
+
 web:
   config:
     existingSecret: ""
     secretRefKeys:
       adminUsername: "adminUsername"
       adminPassword: "adminPassword"
-    adminUsername: ""
+    adminUsername: "admin"
     adminPassword: ""
+    basicAuthEnabled: true
   service:
     annotations: {}
     externalTrafficPolicy: ""
@@ -73,6 +81,10 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+extraVolumes: ""
+
+extraVolumeMounts: ""
 
 nameOverride: ""
 
