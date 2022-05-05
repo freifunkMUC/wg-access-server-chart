@@ -34,15 +34,15 @@ spec:
       {{- if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}
         - name: merge-config
           image: mikefarah/yq
-          command: ["sh", "-c", "yq '. *= load(\"/secretConfig.yaml\")' /config.yaml > /mergedConfig/config.yaml ",]
+          command: ["sh", "-c", "yq '. *= load(\"/secret-config.yaml\")' /configmap-config.yaml > /merged-config/config.yaml "]
           volumeMounts:
-            - mountPath: /mergedConfig
+            - mountPath: /merged-config
               name: merged-config
-            - mountPath: /config.yaml
+            - mountPath: /configmap-config.yaml
               subPath: config.yaml
-              name: config
-            - mountPath: /secretConfig.yaml
-              subPath: secretConfig.yaml
+              name: configmap-config
+            - mountPath: /secret-config.yaml
+              subPath: config.yaml
               name: secret-config
       {{- end }}
       {{- with .Values.initContainers }}
@@ -98,7 +98,7 @@ spec:
             - name: data
               mountPath: /data
             {{- end }}
-            - name: {{ if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}merged-config{{ else }}config{{ end }}
+            - name: {{ if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}merged-config{{ else }}configmap-config{{ end }}
               mountPath: /config.yaml
               subPath: config.yaml
           {{- with .Values.extraVolumeMounts }}
@@ -124,7 +124,7 @@ spec:
           emptyDir: {}
         {{- end }}
       {{- end }}
-        - name: config
+        - name: configmap-config
           configMap:
             name: "{{ $fullName }}"
         - name: secret-config
@@ -132,7 +132,7 @@ spec:
             secretName: {{ include "wg-access-server.secretConfigSecretName" . | quote }}
             items:
               - key: {{ .Values.secretConfig.secretRefKeys.config }}
-                path: secretConfig.yaml
+                path: secret-config.yaml
         - name: merged-config
           emptyDir: {}
       {{- with .Values.extraVolumes }}
