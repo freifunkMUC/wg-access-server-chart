@@ -132,7 +132,7 @@ spec:
             secretName: {{ include "wg-access-server.secretConfigSecretName" . | quote }}
             items:
               - key: {{ .Values.secretConfig.secretRefKeys.config }}
-                path: secret-config.yaml
+                path: config.yaml
         - name: merged-config
           emptyDir: {}
       {{- with .Values.extraVolumes }}
