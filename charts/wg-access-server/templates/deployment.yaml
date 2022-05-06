@@ -91,6 +91,8 @@ spec:
               {{- else}}
               value: "sqlite3:///data/db.sqlite3"
               {{- end }}
+            - name: WG_CONFIG
+              value: "/config.yaml"
           volumeMounts:
             - name: tun
               mountPath: /dev/net/tun
