@@ -47,6 +47,9 @@ spec:
 {{- if and ( eq .Values.wireguard.service.type "LoadBalancer" ) ( .Values.wireguard.service.loadBalancerIP ) }}
   loadBalancerIP: {{ .Values.wireguard.service.loadBalancerIP }}
 {{- end }}
+{{- if and ( eq .Values.wireguard.service.type "NodePort" ) ( .Values.wireguard.service.externalIPs ) }}
+  externalIPs: {{ toYaml .Values.wireguard.service.externalIPs | nindent 4 }}
+{{- end }}
   ports:
     - port: {{ .Values.wireguard.service.port }}
       targetPort: {{ .Values.wireguard.service.port }}
