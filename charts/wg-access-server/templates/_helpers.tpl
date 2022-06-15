@@ -78,3 +78,51 @@ Create a randomly generated admin password if none is supplied
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Return PostgreSQL Connection Secret Name
+*/}}
+{{- define "wg-access-server.postgresqlConnectionSecretName" -}}
+{{- if .Values.postgresql.existingSecret -}}
+    {{- .Values.postgresql.existingSecret -}}
+{{- else -}}
+    {{- include "wg-access-server.fullname" . -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Return Web Config Secret Name
+*/}}
+{{- define "wg-access-server.webConfigSecretName" -}}
+{{- if .Values.web.config.existingSecret -}}
+    {{- .Values.web.config.existingSecret -}}
+{{- else -}}
+    {{- include "wg-access-server.fullname" . -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Return WireGuard Config Secret Name
+*/}}
+{{- define "wg-access-server.wireguardConfigSecretName" -}}
+{{- if .Values.wireguard.config.existingSecret -}}
+    {{- .Values.wireguard.config.existingSecret -}}
+{{- else -}}
+    {{- include "wg-access-server.fullname" . -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Return WireGuard secretConfig Secret Name
+*/}}
+{{- define "wg-access-server.secretConfigSecretName" -}}
+{{- if .Values.secretConfig.existingSecret -}}
+    {{- .Values.secretConfig.existingSecret -}}
+{{- else -}}
+    {{- include "wg-access-server.fullname" . -}}
+{{- end -}}
+{{- end -}}

@@ -5,10 +5,22 @@ config:
   vpn:
     cidrv6: 0
 
+secretConfig:
+  config: {}
+  existingSecret: ""
+  secretRefKeys:
+    config: "secretConfig"
+
+
 web:
   config:
+    existingSecret: ""
+    secretRefKeys:
+      adminUsername: "adminUsername"
+      adminPassword: "adminPassword"
     adminUsername: "admin"
     adminPassword: ""
+    basicAuthEnabled: true
   service:
     annotations: {}
     externalTrafficPolicy: ""
@@ -17,6 +29,9 @@ web:
 
 wireguard:
   config:
+    existingSecret: ""
+    secretRefKeys:
+      privateKey: "privateKey"
     privateKey: ""
   service:
     annotations: {}
@@ -25,8 +40,16 @@ wireguard:
     externalTrafficPolicy: ""
     ipFamilyPolicy: SingleStack
     loadBalancerIP: ""
+    externalIPs: []
     port: 51820
     nodePort: ""
+
+postgresql:
+  enabled: false
+  uri: ""
+  #existingSecret: ""
+  secretRefKeys:
+    uri: "postgresqlUri"
 
 persistence:
   enabled: false
@@ -45,6 +68,7 @@ persistence:
   storageClass: ""
   size: 100Mi
 
+initContainers: []
 
 ingress:
   enabled: false
@@ -58,6 +82,10 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+extraVolumes: ""
+
+extraVolumeMounts: ""
 
 nameOverride: ""
 

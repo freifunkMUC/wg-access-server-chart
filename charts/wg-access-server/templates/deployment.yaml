@@ -28,6 +28,26 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+    {{- if or (or .Values.secretConfig.config .Values.secretConfig.existingSecret) (.Values.initContainers)}}
+      initContainers:
+    {{- end }}
+      {{- if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}
+        - name: merge-config
+          image: mikefarah/yq
+          command: ["sh", "-c", "yq '. *= load(\"/secret-config.yaml\")' /configmap-config.yaml > /merged-config/config.yaml "]
+          volumeMounts:
+            - mountPath: /merged-config
+              name: merged-config
+            - mountPath: /configmap-config.yaml
+              subPath: config.yaml
+              name: configmap-config
+            - mountPath: /secret-config.yaml
+              subPath: config.yaml
+              name: secret-config
+      {{- end }}
+      {{- with .Values.initContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -45,33 +65,47 @@ spec:
           env:
             - name: WG_WIREGUARD_PORT
               value: {{ .Values.wireguard.service.port | quote }}
-            {{- if .Values.wireguard.config.privateKey }}
             - name: WG_WIREGUARD_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: "{{ $fullName }}"
-                  key: privateKey
-            {{- end }}
-            {{- if .Values.web.config.adminUsername }}
+                  name: {{ include "wg-access-server.wireguardConfigSecretName" . | quote }}
+                  key: {{ .Values.wireguard.config.secretRefKeys.privateKey }}
+            {{- if .Values.web.config.basicAuthEnabled }}
             - name: WG_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: "{{ $fullName }}"
-                  key: adminUsername
-            {{- end}}
+                  name: {{ include "wg-access-server.webConfigSecretName" . | quote }}
+                  key: {{ .Values.web.config.secretRefKeys.adminUsername }}
             - name: WG_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ $fullName }}"
-                  key: adminPassword
+                  name: {{ include "wg-access-server.webConfigSecretName" . | quote }}
+                  key: {{ .Values.web.config.secretRefKeys.adminPassword }}
+            {{- end }}
+            - name: WG_STORAGE
+              {{- if .Values.postgresql.enabled }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "wg-access-server.postgresqlConnectionSecretName" . | quote }}
+                  key: {{ .Values.postgresql.secretRefKeys.uri }}
+              {{- else}}
+              value: "sqlite3:///data/db.sqlite3"
+              {{- end }}
+            - name: WG_CONFIG
+              value: "/config.yaml"
           volumeMounts:
             - name: tun
               mountPath: /dev/net/tun
+            {{- if not .Values.postgresql.enabled }}
             - name: data
               mountPath: /data
-            - name: config
+            {{- end }}
+            - name: {{ if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}merged-config{{ else }}configmap-config{{ end }}
               mountPath: /config.yaml
               subPath: config.yaml
+          {{- with .Values.extraVolumeMounts }}
+            {{- tpl ( . | toYaml ) $ | nindent 12 }}
+          {{- end}}
           readinessProbe:
             httpGet:
               path: /
@@ -83,17 +117,29 @@ spec:
           hostPath:
             type: 'CharDevice'
             path: /dev/net/tun
+      {{- if not .Values.postgresql.enabled }}
         - name: data
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ $fullName }}{{- end }}
-        {{- end }}
-        {{- if not .Values.persistence.enabled }}
+        {{- else }}
           emptyDir: {}
         {{- end }}
-        - name: config
+      {{- end }}
+        - name: configmap-config
           configMap:
             name: "{{ $fullName }}"
+        - name: secret-config
+          secret:
+            secretName: {{ include "wg-access-server.secretConfigSecretName" . | quote }}
+            items:
+              - key: {{ .Values.secretConfig.secretRefKeys.config }}
+                path: config.yaml
+        - name: merged-config
+          emptyDir: {}
+      {{- with .Values.extraVolumes }}
+        {{- tpl ( . | toYaml ) $ | nindent 8 }}
+      {{- end}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
