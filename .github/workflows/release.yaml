@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - catriel/ci-release-next-steps
 
 jobs:
   release:
