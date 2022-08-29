@@ -57,10 +57,10 @@ ingress:
     kubernetes.io/ingress.class: "nginx",
     cert-manager.io/cluster-issuer: "letsencrypt-prod" 
   hosts:
-    - vpn.mydomain.com
+    - example.com
   tls:
     - hosts: 
-        - vpn.mydomain.com
+        - example.com
       secretName: `wg-access-server-tls`
 ```
 
