@@ -126,5 +126,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-# Test new changes
