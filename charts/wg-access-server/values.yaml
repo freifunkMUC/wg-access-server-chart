@@ -47,7 +47,7 @@ wireguard:
 postgresql:
   enabled: false
   uri: ""
-  #existingSecret: ""
+  # existingSecret: ""
   secretRefKeys:
     uri: "postgresqlUri"
 
