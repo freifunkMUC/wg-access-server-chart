@@ -32,7 +32,8 @@ wireguard:
     existingSecret: ""
     secretRefKeys:
       privateKey: "privateKey"
-    privateKey: ""
+    # PrivateKey must be change before run this on prodcution.
+    privateKey: "qJvFeHHuffBaPWx4veJGQqXw6j5zdo5cSOaBd1Z0Km4="
   service:
     annotations: {}
     type: ClusterIP
@@ -47,7 +48,7 @@ wireguard:
 postgresql:
   enabled: false
   uri: ""
-  #existingSecret: ""
+  # existingSecret: ""
   secretRefKeys:
     uri: "postgresqlUri"
 
