@@ -1,9 +1,9 @@
 ## Installing the Chart
 
-To install the chart with the release name `my-release`:
+To install the chart with the release name `wireguard`:
 
 ```bash
-$ helm install my-release --repo https://freie-netze.org/wg-access-server wg-access-server
+$ helm install wireguard --repo https://freifunkMUC.github.io/wg-access-server-chart/ wg-access-server
 ```
 
 The command deploys wg-access-server on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
@@ -18,47 +18,51 @@ If no admin password is set, the Chart generates a random one. You can retrieve 
 
 ## Uninstalling the Chart
 
-To uninstall/delete the my-release deployment:
+To uninstall/delete the `wireguard` deployment:
 
-```bash
-$ helm delete my-release
+```
+$ helm delete wireguard
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Example values.yaml
 
-```yaml
-config:
-  externalHost: "<loadbalancer-ip>"
-
-# wg access server is an http server without TLS. Exposing it via a loadbalancer is NOT secure!
-# Uncomment the following section only if you are running on private network or simple testing.
-# A much better option would be TLS terminating ingress controller or reverse-proxy.
-# web:
-#   service:
-#     type: "LoadBalancer"
-#     loadBalancerIP: "<loadbalancer-ip>"
+```
+# wg-access-server config
+web:
+  config:
+    adminUsername: "<Username for the admin user>"
+    adminPassword: "<Password for the admin user>",
+  service:
+    type: 'LoadBalancer',
+    loadBalancerIP: "IP of the admin panel",
 
 wireguard:
   config:
-    privateKey: "<wireguard-private-key>"
+    privateKey: "<Private Key>"
   service:
-    type: "LoadBalancer"
-    loadBalancerIP: "<loadbalancer-ip>"
+    type: ClusterIP
+    loadBalancerIP: "IP of the WireGuard service"
 
 persistence:
   enabled: true
+  size: "100Mi"
+  accessModes:
+    - ReadWriteOnce
 
 ingress:
   enabled: true
-  hosts: ["vpn.example.com"]
+  annotations:
+    kubernetes.io/ingress.class: "nginx",
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" 
+  hosts:
+    - vpn.example.com
   tls:
-    - hosts: ["vpn.example.com"]
-      secretName: "tls-wg-access-server"
+    - hosts: 
+        - vpn.example.com
+      secretName: `wg-access-server-tls`
 ```
-
-
 
 ## All Configuration
 
