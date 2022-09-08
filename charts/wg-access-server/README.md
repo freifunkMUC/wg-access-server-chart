@@ -84,6 +84,10 @@ ingress:
 | wireguard.service.loadBalancerIP | string | `""` |  |
 | wireguard.service.port | int | `51820` |  |
 | wireguard.service.nodePort | int | `""` | Use available port from range 30000-32768 |
+| storage.enabled | bool | `false` |  |
+| storage.uri | string | `""` | A storage backend connection string |
+| storage.existingSecret | string | `""` | Use existing storage secret |
+| storage.secretRefKeys.uri | string | `"storageUri"` | Secret key name containing storage uri |
 | persistence.enabled | bool | `false` |  |
 | persistence.existingClaim | string | `""` | Use existing PVC claim for persistence instead |
 | persistence.annotations | object | `{}` |  |
