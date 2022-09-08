@@ -83,11 +83,11 @@ spec:
                   key: {{ .Values.web.config.secretRefKeys.adminPassword }}
             {{- end }}
             - name: WG_STORAGE
-              {{- if .Values.postgresql.enabled }}
+              {{- if .Values.storage.enabled }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "wg-access-server.postgresqlConnectionSecretName" . | quote }}
-                  key: {{ .Values.postgresql.secretRefKeys.uri }}
+                  name: {{ include "wg-access-server.storageConnectionSecretName" . | quote }}
+                  key: {{ .Values.storage.secretRefKeys.uri }}
               {{- else}}
               value: "sqlite3:///data/db.sqlite3"
               {{- end }}
@@ -96,7 +96,7 @@ spec:
           volumeMounts:
             - name: tun
               mountPath: /dev/net/tun
-            {{- if not .Values.postgresql.enabled }}
+            {{- if not .Values.storage.enabled }}
             - name: data
               mountPath: /data
             {{- end }}
@@ -117,7 +117,7 @@ spec:
           hostPath:
             type: 'CharDevice'
             path: /dev/net/tun
-      {{- if not .Values.postgresql.enabled }}
+      {{- if not .Values.storage.enabled }}
         - name: data
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

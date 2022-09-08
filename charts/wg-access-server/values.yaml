@@ -45,12 +45,12 @@ wireguard:
     port: 51820
     nodePort: ""
 
-postgresql:
+storage:
   enabled: false
   uri: ""
   # existingSecret: ""
   secretRefKeys:
-    uri: "postgresqlUri"
+    uri: "storageUri"
 
 persistence:
   enabled: false

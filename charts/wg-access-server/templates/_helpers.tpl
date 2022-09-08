@@ -83,9 +83,9 @@ Create a randomly generated admin password if none is supplied
 {{/*
 Return PostgreSQL Connection Secret Name
 */}}
-{{- define "wg-access-server.postgresqlConnectionSecretName" -}}
-{{- if .Values.postgresql.existingSecret -}}
-    {{- .Values.postgresql.existingSecret -}}
+{{- define "wg-access-server.storageConnectionSecretName" -}}
+{{- if .Values.storage.existingSecret -}}
+    {{- .Values.storage.existingSecret -}}
 {{- else -}}
     {{- include "wg-access-server.fullname" . -}}
 {{- end -}}
