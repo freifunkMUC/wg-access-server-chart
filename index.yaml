@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   wg-access-server:
   - apiVersion: v2
+    appVersion: v0.8.4
+    created: "2023-02-16T13:26:12.725367152Z"
+    description: A Wireguard VPN Access Server
+    digest: 6c8cfe2b259850a73667a1060b85754b91216bb6d12251d147a3501379cbb11d
+    name: wg-access-server
+    urls:
+    - https://github.com/freifunkMUC/wg-access-server-chart/releases/download/wg-access-server-0.10.1/wg-access-server-0.10.1.tgz
+    version: 0.10.1
+  - apiVersion: v2
     appVersion: v0.8.3
     created: "2023-02-12T12:29:03.04832895Z"
     description: A Wireguard VPN Access Server
@@ -37,4 +46,4 @@ entries:
     urls:
     - https://github.com/freifunkMUC/wg-access-server-chart/releases/download/wg-access-server-0.9.7/wg-access-server-0.9.7.tgz
     version: 0.9.7
-generated: "2023-02-12T12:29:03.04834205Z"
+generated: "2023-02-16T13:26:12.725426652Z"
