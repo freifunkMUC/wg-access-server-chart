@@ -92,6 +92,10 @@ nameOverride: ""
 
 fullnameOverride: ""
 
+# use the host network for the main container. Set to "true" if you want the
+# underlying K8S network to be reachable via the VPN.
+# hostNetwork: false
+
 imagePullSecrets: []
 
 image:
@@ -108,6 +112,12 @@ strategy:
   # the deployment strategy type will default to "Recreate" when persistence is enabled
   # or "RollingUpdate" when persistence is not enabled.
   # type: Recreate
+
+# set securityContext for the main container. With some kernel versions, adding the
+# 'NET_RAW' capability might be required for the iptables table to be initialized.
+# securityContext:
+#   capabilities:
+#     add: ['NET_ADMIN']
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
