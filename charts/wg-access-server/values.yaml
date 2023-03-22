@@ -92,7 +92,7 @@ nameOverride: ""
 
 fullnameOverride: ""
 
-# use the host network for the main container. Set to "true" if you want the
+# use the host network for the application pod. Set to "true" if you want the
 # underlying K8S network to be reachable via the VPN.
 # hostNetwork: false
 
@@ -113,7 +113,7 @@ strategy:
   # or "RollingUpdate" when persistence is not enabled.
   # type: Recreate
 
-# set securityContext for the main container. With some kernel versions, adding the
+# set securityContext for the application pod. With some kernel versions, adding the
 # 'NET_RAW' capability might be required for the iptables table to be initialized.
 # securityContext:
 #   capabilities:
