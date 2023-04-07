@@ -101,6 +101,7 @@ ingress:
 | ingress.tls | list | `[]` |  |
 | nameOverride | string | `""` |  |
 | fullnameOverride | string | `""` |  |
+| hostNetwork | bool | `false` | Run the application pod in the host network of the node |
 | imagePullSecrets | list | `[]` |  |
 | image.repository | string | `"ghcr.io/freifunkmuc/wg-access-server"` |  |
 | image.tag | string | `""` |  |
@@ -108,6 +109,7 @@ ingress:
 | replicas | int | `1` |  |
 | strategy.type | string | `""` | `Recreate` if `persistence.enabled` true or `RollingUpdate` if false |
 | resources | object | `{}` | pod cpu/memory resource requests and limits |
+| securityContext | object | `{"capabilities":{"add": ["NET_ADMIN"]}}` | Set `securityContext` for the application pod |
 | nodeSelector | object | `{}` |  |
 | tolerations | list | `[]` |  |
 | affinity | object | `{}` |  |

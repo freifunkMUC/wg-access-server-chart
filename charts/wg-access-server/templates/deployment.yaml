@@ -24,6 +24,7 @@ spec:
       labels:
         {{- include "wg-access-server.selectorLabels" . | nindent 8 }}
     spec:
+      hostNetwork: {{ .Values.hostNetwork | default "false" }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -51,8 +52,12 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
+          {{- if .Values.securityContext  }}
+          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- else }}
             capabilities:
               add: ['NET_ADMIN']
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
