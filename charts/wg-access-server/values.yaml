@@ -5,6 +5,13 @@ config:
   vpn:
     cidrv6: 0
 
+  # Declare a custom DNS entry to be written into the wg-quick client config file.
+  # Adapt to your needs or remove if you want the wg-access-server to act as DNS server.
+  clientConfig:
+    dnsServers:
+      - ""
+    dnsSearchDomain: ""
+
 secretConfig:
   config: {}
   existingSecret: ""
@@ -32,7 +39,7 @@ wireguard:
     existingSecret: ""
     secretRefKeys:
       privateKey: "privateKey"
-    # PrivateKey must be change before run this on prodcution.
+    # PrivateKey must be changed before running this in a production environment.
     privateKey: "qJvFeHHuffBaPWx4veJGQqXw6j5zdo5cSOaBd1Z0Km4="
   service:
     annotations: {}

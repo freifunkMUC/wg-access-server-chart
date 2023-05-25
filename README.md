@@ -72,7 +72,7 @@ ingress:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| config | object | `{}` | inline wg-access-server config (config.yaml) |
+| config | object | `{}` | inline wg-access-server config ([config.yaml](https://www.freie-netze.org/wg-access-server/2-configuration/#the-config-file-configyaml)) |
 | web.config.adminUsername | string | `"admin"` |  |
 | web.config.adminPassword | string | `""` | If omitted a random password will be generated and stored in the secret |
 | web.service.annotations | object | `{}` |  |
