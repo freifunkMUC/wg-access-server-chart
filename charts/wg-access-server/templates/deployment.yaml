@@ -57,6 +57,7 @@ spec:
           {{- else }}
             capabilities:
               add: ['NET_ADMIN']
+              add: ['SYS_MODULE']
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
