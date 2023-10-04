@@ -61,7 +61,7 @@ web:
       adminUsername: "adminUsername"
       adminPassword: "adminPassword"
     adminUsername: "admin"
-    adminPassword: ""
+    adminPassword: "admin"
     basicAuthEnabled: true
   service:
     annotations: {}
@@ -157,9 +157,9 @@ strategy:
 
 # set securityContext for the application pod. With some kernel versions, adding the
 # 'NET_RAW' capability might be required for the iptables table to be initialized.
-# securityContext:
-#   capabilities:
-#     add: ['NET_ADMIN']
+securityContext:
+  capabilities:
+    add: ['NET_ADMIN']
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

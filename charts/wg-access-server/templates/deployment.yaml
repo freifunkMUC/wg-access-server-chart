@@ -57,7 +57,6 @@ spec:
           {{- else }}
             capabilities:
               add: ['NET_ADMIN']
-              add: ['SYS_MODULE']
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -102,13 +101,12 @@ spec:
           volumeMounts:
             - name: tun
               mountPath: /dev/net/tun
+            - name: mods
+              mountPath: /lib/modules
             {{- if not .Values.storage.enabled }}
             - name: data
               mountPath: /data
             {{- end }}
-            - name: {{ if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}merged-config{{ else }}configmap-config{{ end }}
-              mountPath: /config.yaml
-              subPath: config.yaml
           {{- with .Values.extraVolumeMounts }}
             {{- tpl ( . | toYaml ) $ | nindent 12 }}
           {{- end}}
@@ -123,6 +121,9 @@ spec:
           hostPath:
             type: 'CharDevice'
             path: /dev/net/tun
+        - name: mods
+          hostPath:
+            path: /lib/modules
       {{- if not .Values.storage.enabled }}
         - name: data
         {{- if .Values.persistence.enabled }}
