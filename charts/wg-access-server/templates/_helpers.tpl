@@ -82,7 +82,7 @@ Return PostgreSQL Connection Secret Name
 {{- if .Values.storage.existingSecret -}}
     {{- .Values.storage.existingSecret -}}
 {{- else -}}
-    {{- include "wg-access-server.fullname" . -}}
+    {{- include "wg-access-server.name" . -}}
 {{- end -}}
 {{- end -}}
 
@@ -94,7 +94,7 @@ Return Web Config Secret Name
 {{- if .Values.web.config.existingSecret -}}
     {{- .Values.web.config.existingSecret -}}
 {{- else -}}
-    {{- include "wg-access-server.fullname" . -}}
+    {{- include "wg-access-server.name" . -}}
 {{- end -}}
 {{- end -}}
 
@@ -106,7 +106,7 @@ Return WireGuard Config Secret Name
 {{- if .Values.wireguard.config.existingSecret -}}
     {{- .Values.wireguard.config.existingSecret -}}
 {{- else -}}
-    {{- include "wg-access-server.fullname" . -}}
+    {{- include "wg-access-server.name" . -}}
 {{- end -}}
 {{- end -}}
 
@@ -118,6 +118,6 @@ Return WireGuard secretConfig Secret Name
 {{- if .Values.secretConfig.existingSecret -}}
     {{- .Values.secretConfig.existingSecret -}}
 {{- else -}}
-    {{- include "wg-access-server.fullname" . -}}
+    {{- include "wg-access-server.name" . -}}
 {{- end -}}
 {{- end -}}

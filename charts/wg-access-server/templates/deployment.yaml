@@ -1,8 +1,8 @@
-{{- $fullName := include "wg-access-server.fullname" . -}}
+{{- $fullName := include "wg-access-server.name" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "wg-access-server.fullname" . }}
+  name: {{ include "wg-access-server.name" . }}
   labels:
     {{- include "wg-access-server.labels" . | nindent 4 }}
 spec:

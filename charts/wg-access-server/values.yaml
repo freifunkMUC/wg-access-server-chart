@@ -49,14 +49,14 @@ config:
 
 secretConfig:
   config: {}
-  existingSecret: ""
+  existingSecret:
   secretRefKeys:
     config: "secretConfig"
 
 
 web:
   config:
-    existingSecret: ""
+    existingSecret:
     secretRefKeys:
       adminUsername: "adminUsername"
       adminPassword: "adminPassword"
@@ -71,7 +71,7 @@ web:
 
 wireguard:
   config:
-    existingSecret: ""
+    existingSecret:
     secretRefKeys:
       privateKey: "privateKey"
     # PrivateKey must be changed before running this in a production environment.
@@ -85,7 +85,7 @@ wireguard:
     loadBalancerIP: ""
     externalIPs: []
     port: 51820
-    nodePort: ""
+    nodePort:
 
 storage:
   enabled: false
@@ -132,7 +132,7 @@ extraVolumeMounts: ""
 
 nameOverride: ""
 
-fullnameOverride: ""
+fullnameOverride:
 
 # use the host network for the application pod. Set to "true" if you want the
 # underlying K8S network to be reachable via the VPN.
