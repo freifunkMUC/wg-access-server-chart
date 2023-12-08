@@ -1,6 +1,6 @@
 {{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion .Values.kubeTargetVersionOverride }}
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "wg-access-server.fullname" . -}}
+{{- $fullName := include "wg-access-server.name" . -}}
 {{- if semverCompare ">=1.19-0" $kubeTargetVersion -}}
 apiVersion: networking.k8s.io/v1
 {{- else if semverCompare ">=1.14-0" $kubeTargetVersion -}}

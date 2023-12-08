@@ -3,7 +3,7 @@ Thank you for installing {{ .Chart.Name }}.
 
 Your release is named {{ .Release.Name }}.
 
-{{- $fullName := include "wg-access-server.fullname" . }}
+{{- $fullName := include "wg-access-server.name" . }}
 {{ if .Values.ingress.enabled }}
 You can find the web interface at:
     {{- range .Values.ingress.hosts }}

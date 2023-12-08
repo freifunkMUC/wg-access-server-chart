@@ -1,8 +1,8 @@
-{{- $fullName := include "wg-access-server.fullname" . -}}
+{{- $fullName := include "wg-access-server.name" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "wg-access-server.fullname" . }}
+  name: {{ include "wg-access-server.name" . }}
   labels:
     {{- include "wg-access-server.labels" . | nindent 4 }}
 spec:
@@ -101,13 +101,12 @@ spec:
           volumeMounts:
             - name: tun
               mountPath: /dev/net/tun
+            - name: mods
+              mountPath: /lib/modules
             {{- if not .Values.storage.enabled }}
             - name: data
               mountPath: /data
             {{- end }}
-            - name: {{ if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}merged-config{{ else }}configmap-config{{ end }}
-              mountPath: /config.yaml
-              subPath: config.yaml
           {{- with .Values.extraVolumeMounts }}
             {{- tpl ( . | toYaml ) $ | nindent 12 }}
           {{- end}}
@@ -122,6 +121,9 @@ spec:
           hostPath:
             type: 'CharDevice'
             path: /dev/net/tun
+        - name: mods
+          hostPath:
+            path: /lib/modules
       {{- if not .Values.storage.enabled }}
         - name: data
         {{- if .Values.persistence.enabled }}

@@ -3,3 +3,4 @@ appVersion: v0.10.1
 description: A WireGuard VPN Access Server
 name: wg-access-server
 version: 0.12.1
+
