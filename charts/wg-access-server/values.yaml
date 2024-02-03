@@ -14,7 +14,7 @@ config:
     # Enable/disable the embedded DNS proxy server. This is enabled by default and allows VPN clients to avoid DNS leaks by sending all DNS requests to wg-access-server itself.
     enabled: true
     # The upstream DNS servers to proxy DNS requests to. By default the host machine's resolveconf configuration is used to find its upstream DNS server, with a fallback to Cloudflare.
-    #upstream: resolvconf
+    # upstream: resolvconf
     # A domain to serve configured devices authoritatively. Queries for names in the format .. will be answered with the device's IP addresses.
     domain:
   wireguard:
