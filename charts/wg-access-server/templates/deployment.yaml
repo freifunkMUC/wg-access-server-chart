@@ -107,6 +107,15 @@ spec:
             - name: data
               mountPath: /data
             {{- end }}
+            {{- if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}
+            - mountPath: /config.yaml
+              subPath: config.yaml
+              name: merged-config
+            {{- else }}
+            - mountPath: /config.yaml
+              subPath: config.yaml
+              name: configmap-config
+            {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- tpl ( . | toYaml ) $ | nindent 12 }}
           {{- end}}
