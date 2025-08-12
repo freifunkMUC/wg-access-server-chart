@@ -46,6 +46,7 @@ config:
       - ""
     dnsSearchDomain: ""
     mtu: ""
+    persistentkeepalive: 0
 
 secretConfig:
   config: {}
