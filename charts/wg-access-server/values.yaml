@@ -33,7 +33,7 @@ config:
     nat44: true
     # Disables NAT for IPv6
     nat66: true
-    # BLock or allow traffic between client devices (client isolation)
+    # Block or allow traffic between client devices (client isolation)
     clientIsolation: false
     # The VPN gateway interface. VPN client traffic will be forwarded to this interface.
     # gatewayInterface: default gateway interface (e.g. eth0)
@@ -41,18 +41,26 @@ config:
     allowedIPs:
       - "0.0.0.0/0"
       - "::/0"
+    # optionally disable automatic iptable configuration
+    disableIPTables: false
   clientConfig:
     dnsServers:
       - ""
     dnsSearchDomain: ""
     mtu: ""
+  https:
+    # Enable HTTPS for the web UI
+    enabled: false
+    port: 8443
+    # If not provided, a self-signed certificates will be generated
+    certFile: ""
+    keyFile: ""
 
 secretConfig:
   config: {}
   existingSecret:
   secretRefKeys:
     config: "secretConfig"
-
 
 web:
   config:
