@@ -44,10 +44,9 @@ config:
     # optionally disable automatic iptable configuration
     disableIPTables: false
   clientConfig:
-    dnsServers:
-      - ""
+    dnsServers: []
     dnsSearchDomain: ""
-    mtu: ""
+    mtu: 1420
     persistentkeepalive: 0
   https:
     # Enable HTTPS for the web UI
