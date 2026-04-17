@@ -145,6 +145,7 @@ spec:
         - name: configmap-config
           configMap:
             name: "{{ $fullName }}"
+      {{- if or .Values.secretConfig.config .Values.secretConfig.existingSecret }}
         - name: secret-config
           secret:
             secretName: {{ include "wg-access-server.secretConfigSecretName" . | quote }}
@@ -153,6 +154,7 @@ spec:
                 path: config.yaml
         - name: merged-config
           emptyDir: {}
+      {{- end }}
       {{- with .Values.extraVolumes }}
         {{- tpl ( . | toYaml ) $ | nindent 8 }}
       {{- end}}

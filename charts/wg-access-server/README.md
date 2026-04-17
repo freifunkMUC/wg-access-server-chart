@@ -39,10 +39,10 @@ The command removes all the Kubernetes components associated with the chart and 
 web:
   config:
     adminUsername: "<Username for the admin user>"
-    adminPassword: "<Password for the admin user>",
+    adminPassword: "<Password for the admin user>"
   service:
-    type: 'LoadBalancer',
-    loadBalancerIP: "IP of the admin panel",
+    type: LoadBalancer
+    loadBalancerIP: "IP of the admin panel"
 
 wireguard:
   config:
@@ -60,14 +60,14 @@ persistence:
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: "nginx",
-    cert-manager.io/cluster-issuer: "letsencrypt-prod" 
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
     - vpn.example.com
   tls:
-    - hosts: 
+    - hosts:
         - vpn.example.com
-      secretName: `wg-access-server-tls`
+      secretName: wg-access-server-tls
 ```
 
 ## All Configuration
@@ -79,13 +79,19 @@ ingress:
 | config.enableDeviceMetrics | bool | `true` | Expose device-level Prometheus metrics on `/metrics` (only effective when metadata is enabled). |
 | config.metrics.basicAuth.username | string | `""` | Username required for accessing `/metrics`. Leave empty for no auth. |
 | config.metrics.basicAuth.passwordHash | string | `""` | Bcrypt hash of the password required for `/metrics`. Must be set together with the username. |
+| secretConfig.config | object | `{}` | Secret config overlay merged on top of `config`. |
+| secretConfig.existingSecret | string | `""` | Use an existing secret for secret config overlay. |
+| secretConfig.secretRefKeys.config | string | `"secretConfig"` | Secret key containing secret config overlay content. |
 | web.config.adminUsername | string | `"admin"` |  |
 | web.config.adminPassword | string | `""` | If omitted a random password will be generated and stored in the secret |
+| web.config.basicAuthEnabled | bool | `true` | Enable HTTP basic auth for the web UI. |
+| web.config.existingSecret | string | `""` | Use an existing secret for web admin credentials. |
 | web.service.annotations | object | `{}` |  |
 | web.service.externalTrafficPolicy | string | `""` |  |
 | web.service.type | string | `"ClusterIP"` |  |
 | web.service.loadBalancerIP | string | `""` |  |
 | wireguard.config.privateKey | string | `""` | REQUIRED - A wireguard private key. You can generate one using `$ wg genkey` |
+| wireguard.config.existingSecret | string | `""` | Use an existing secret for the WireGuard private key. |
 | wireguard.service.annotations | object | `{}` |  |
 | wireguard.service.type | string | `"ClusterIP"` |  |
 | wireguard.service.sessionAffinity | string | `"ClientIP"` |  |
@@ -111,6 +117,8 @@ ingress:
 | ingress.tls | list | `[]` |  |
 | nameOverride | string | `""` |  |
 | fullnameOverride | string | `""` |  |
+| kubeTargetVersionOverride | string | `""` | Override Kubernetes target version for ingress API selection logic. |
+| hostNetwork | bool | `false` | Use host networking for the pod. |
 | imagePullSecrets | list | `[]` |  |
 | image.repository | string | `"ghcr.io/freifunkmuc/wg-access-server"` |  |
 | image.tag | string | `""` |  |
