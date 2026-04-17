@@ -77,7 +77,7 @@ web:
       adminUsername: "adminUsername"
       adminPassword: "adminPassword"
     adminUsername: "admin"
-    adminPassword: ""
+    adminPassword: "admin"
     basicAuthEnabled: true
   service:
     annotations: {}
@@ -91,7 +91,7 @@ wireguard:
     secretRefKeys:
       privateKey: "privateKey"
     # REQUIRED: Set this value explicitly before deployment, or use existingSecret.
-    privateKey: ""
+    privateKey: "qJvFeHHuffBaPWx4veJGQqXw6j5zdo5cSOaBd1Z0Km4="
   service:
     annotations: {}
     type: ClusterIP
