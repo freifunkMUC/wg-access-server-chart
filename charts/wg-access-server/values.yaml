@@ -172,6 +172,17 @@ strategy:
   # or "RollingUpdate" when persistence is not enabled.
   # type: Recreate
 
+# Extra labels to add to the pod template, merged alongside the chart's own
+# selector labels. Useful for e.g. giving a common label across multiple
+# releases of this chart so a single ServiceMonitor/PodMonitor-style
+# resource can select all of them without listing each release by name.
+podLabels: {}
+
+# Extra annotations to add to the pod template, merged alongside the
+# chart's own checksum annotations. Useful for e.g. Prometheus
+# scrape-annotation-based service discovery (prometheus.io/scrape, etc).
+podAnnotations: {}
+
 # set securityContext for the application pod. With some kernel versions, adding the
 # 'NET_RAW' capability might be required for the iptables table to be initialized.
 securityContext:

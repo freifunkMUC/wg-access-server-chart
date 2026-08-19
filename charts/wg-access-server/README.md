@@ -125,6 +125,8 @@ ingress:
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | replicas | int | `1` |  |
 | strategy.type | string | `""` | `Recreate` if `persistence.enabled` true or `RollingUpdate` if false |
+| podLabels | object | `{}` | Extra labels merged into the pod template, alongside the chart's own selector labels. |
+| podAnnotations | object | `{}` | Extra annotations merged into the pod template, alongside the chart's own checksum annotations. |
 | resources | object | `{}` | pod cpu/memory resource requests and limits |
 | nodeSelector | object | `{}` |  |
 | tolerations | list | `[]` |  |
