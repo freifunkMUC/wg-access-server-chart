@@ -79,6 +79,10 @@ ingress:
 | config.enableDeviceMetrics | bool | `true` | Expose device-level Prometheus metrics on `/metrics` (only effective when metadata is enabled). |
 | config.metrics.basicAuth.username | string | `""` | Username required for accessing `/metrics`. Leave empty for no auth. |
 | config.metrics.basicAuth.passwordHash | string | `""` | Bcrypt hash of the password required for `/metrics`. Must be set together with the username. |
+| config.metrics.maxDeviceSeries | int | `1000` (server default) | Caps how many devices are exported as individual series on `/metrics`. Device names are user controlled, so an uncapped export lets any user inflate the scraping Prometheus' cardinality. Negative removes the cap, `0` exports aggregates only. |
+| config.loglevel | string | `info` | The global log level. Note the all-lowercase key. |
+| config.externalHost | string | unset | External origin of the server, e.g. `https://vpn.example.com`. Written into client config files as the `Endpoint`, so it must be reachable by clients. |
+| config.auth.sessionStore.secure | bool | `false` | Mark the session cookie `Secure` (HTTPS only). Added in wg-access-server v1.1.0. Breaks login if any user reaches the UI over plain HTTP. |
 | secretConfig.config | object | `{}` | Secret config overlay merged on top of `config`. |
 | secretConfig.existingSecret | string | `""` | Use an existing secret for secret config overlay. |
 | secretConfig.secretRefKeys.config | string | `"secretConfig"` | Secret key containing secret config overlay content. |
