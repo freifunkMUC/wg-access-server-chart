@@ -7,7 +7,7 @@ config:
   # The external origin of the server, e.g. https://vpn.example.com. This is
   # written into the client configuration files as the Endpoint, so it has to be
   # set to something clients can actually reach.
-  # externalHost: 
+  # externalHost:
   # Collect device metadata logging (last handshake, RX/TX). Required for "Last seen" in the UI.
   enableMetadata: false
   # Expose device-level Prometheus metrics on /metrics. Requires enableMetadata to be effective.
