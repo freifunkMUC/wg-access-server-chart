@@ -1,7 +1,13 @@
 # wg-access-server config
 config:
-  # The global log level
-  logLevel: info
+  # The global log level.
+  # NOTE: the key is all lowercase - the server's yaml tag is `loglevel`, and
+  # yaml.v2 matches keys case-sensitively, so `logLevel` is silently ignored.
+  loglevel: info
+  # The external origin of the server, e.g. https://vpn.example.com. This is
+  # written into the client configuration files as the Endpoint, so it has to be
+  # set to something clients can actually reach.
+  # externalHost:
   # Collect device metadata logging (last handshake, RX/TX). Required for "Last seen" in the UI.
   enableMetadata: false
   # Expose device-level Prometheus metrics on /metrics. Requires enableMetadata to be effective.
@@ -49,11 +55,16 @@ config:
     dnsServers: []
     dnsSearchDomain: ""
     mtu: 1420
-    persistentkeepalive: 0
+    # NOTE: capitalised - the server's yaml tag is `PersistentKeepalive`, and
+    # yaml.v2 matches keys case-sensitively, so `persistentkeepalive` is
+    # silently ignored.
+    PersistentKeepalive: 0
   https:
     # Enable HTTPS for the web UI
     enabled: false
     port: 8443
+    # Listen host for the HTTPS server. Empty means all hosts.
+    # host: ""
     # If not provided, a self-signed certificates will be generated
     certFile: ""
     keyFile: ""
@@ -63,6 +74,22 @@ config:
       username: ""
       # Optional bcrypt hash for the metrics password (matches username above).
       passwordHash: ""
+    # Caps how many devices are exported as individual time series on /metrics.
+    # Device names and owners are user controlled, so an uncapped export lets any
+    # user inflate the scraping Prometheus' cardinality.
+    # Negative removes the cap, 0 exports only aggregates. Server default: 1000.
+    # maxDeviceSeries: 1000
+
+  # Authentication backends. Anything secret (OIDC client secrets, the session
+  # store secret, htpasswd entries) belongs in `secretConfig` below instead, which
+  # is merged over this block at startup.
+  # auth:
+  #   sessionStore:
+  #     # Mark the session cookie as Secure so browsers only send it over HTTPS.
+  #     # Added in wg-access-server v1.1.0, defaults to false. The web UI is also
+  #     # served over plain HTTP on port 8000, so only enable this when every user
+  #     # reaches the UI via HTTPS - otherwise login breaks silently.
+  #     secure: false
 
 secretConfig:
   config: {}
