@@ -127,7 +127,7 @@ ingress:
 | image.repository | string | `"ghcr.io/freifunkmuc/wg-access-server"` |  |
 | image.tag | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| replicas | int | `1` |  |
+| replicas | int | `1` | More than one replica needs the Postgres storage backend. With pgbouncer in front of Postgres, use session pooling mode. |
 | strategy.type | string | `""` | `Recreate` if `persistence.enabled` true or `RollingUpdate` if false |
 | podLabels | object | `{}` | Extra labels merged into the pod template, alongside the chart's own selector labels. |
 | podAnnotations | object | `{}` | Extra annotations merged into the pod template, alongside the chart's own checksum annotations. |

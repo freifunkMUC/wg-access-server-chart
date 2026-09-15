@@ -190,7 +190,10 @@ image:
   pullPolicy: IfNotPresent
 
 # multiple replicas is only supported when using
-# a supported highly-available storage backend (i.e. postgresql)
+# a supported highly-available storage backend (i.e. postgresql).
+# Replicas coordinate device creation through a Postgres advisory lock
+# (wg-access-server >= v1.2.0); if pgbouncer sits in front of Postgres it
+# must run in session pooling mode, or two devices can get the same VPN IP.
 replicas: 1
 
 strategy:
