@@ -2,7 +2,12 @@
 
 version: 2
 
+# Minor and patch updates come as one PR per ecosystem; major updates stay separate.
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule: {interval: monthly}
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: [minor, patch]
