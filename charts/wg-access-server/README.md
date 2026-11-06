@@ -97,7 +97,7 @@ ingress:
 | config.trustedProxies | list | unset | Networks whose `X-Forwarded-For` is believed (e.g. the ingress controller). |
 | config.maxDevicesPerUser | int | `0` | Maximum devices per user, `0` is no limit. |
 | config.enableApiTokens | bool | `false` | Let users create API tokens for scripts. |
-| config.apiTokenMaxLifetime | string/int | `0` | Longest an API token works, e.g. `720h`. `0` is no cap. |
+| config.apiTokenMaxLifetime | string | `0s` | Longest an API token works, e.g. `720h`. `0s` is no cap (a bare number is rejected). |
 | config.httpEnabled | bool | server default `true` | Serve the web UI over plain HTTP too. If `false`, adjust the probes to HTTPS. |
 | config.vpn.firewall | string | `iptables` | `iptables`, `nftables` or `none`. Access policies need `nftables`. |
 | config.auth.sessionStore.maxAge | string | `720h` (server default) | Web session lifetime. |

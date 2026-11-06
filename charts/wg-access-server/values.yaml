@@ -19,8 +19,8 @@ config:
   # Let users create API tokens for scripts (wg-access-server >= v1.3.0).
   enableApiTokens: false
   # Longest an API token works, counted from its creation, e.g. 720h (at least
-  # 1m). 0 means no cap.
-  apiTokenMaxLifetime: 0
+  # 1m). 0s means no cap (a bare 0 fails to parse).
+  apiTokenMaxLifetime: 0s
   # Serve the web UI over plain HTTP on port 8000 as well (default true). Client
   # configs contain private keys, so only disable with HTTPS on (see https.*).
   # httpEnabled: true
