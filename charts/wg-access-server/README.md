@@ -22,6 +22,18 @@ If no admin password is set, the Chart generates a random one. You can retrieve 
 - `config.enableDeviceMetrics`: Expose device-level Prometheus metrics on `/metrics`. Defaults to `true` and only has an effect when metadata collection is enabled.
 - `config.metrics.basicAuth.username` / `config.metrics.basicAuth.passwordHash`: Protect the `/metrics` endpoint with HTTP Basic Auth (bcrypt hash). Leave empty to keep it public.
 
+## Upgrading to 1.3.0 (wg-access-server v1.3.0)
+
+- **Back up the database first.** The first start applies 15 schema migrations (`schema_migrations`). Once migrated, **a downgrade is refused**: v1.2.1 and older will not start on the database, so keep the backup (and for rollbacks restore it together with the older chart).
+- **SQLite** (default): the `devices` table is rebuilt once on first start.
+- **MySQL**: the missing unique index on `public_key` is created; if two devices share a key the server refuses to start and names the query to find them ([storage docs](https://github.com/freifunkMUC/wg-access-server/blob/v1.3.0/docs/storage.md)). `users.policies`, `users.totp_recovery` and `devices.routes` become `text`, which rewrites both tables once.
+- **Replicas** on a shared database take turns migrating.
+- **Everybody is signed out once**: sessions are now stored server-side.
+- **Passkeys** (two-factor) are bound to `config.externalHost`. Set it to the name users type (the ingress host) before they register passkeys.
+- Defaults keep the previous behaviour: `config.vpn.firewall` is `iptables`, API tokens and the device limit are off. `nftables` needs no extra capability (`NET_ADMIN` is enough). Access policies (`vpn.policies`) need `nftables`.
+- `wireguard.preUp`/`postUp`/`preDown`/`postDown` are only run if the config file is writable by its owner alone; the ConfigMap mount is mode 0644, so they do not work through this chart.
+- Settings not listed here (GitHub sign-in, TOTP, `policyMapping`, ...) go under `config.auth` / `secretConfig.config`, see the [auth docs](https://github.com/freifunkMUC/wg-access-server/blob/v1.3.0/docs/auth.md).
+
 ## Uninstalling the Chart
 
 To uninstall/delete the `wireguard` deployment:
@@ -82,6 +94,13 @@ ingress:
 | config.metrics.maxDeviceSeries | int | `1000` (server default) | Caps how many devices are exported as individual series on `/metrics`. Device names are user controlled, so an uncapped export lets any user inflate the scraping Prometheus' cardinality. Negative removes the cap, `0` exports aggregates only. |
 | config.loglevel | string | `info` | The global log level. Note the all-lowercase key. |
 | config.externalHost | string | unset | External origin of the server, e.g. `https://vpn.example.com`. Written into client config files as the `Endpoint`, so it must be reachable by clients. |
+| config.trustedProxies | list | unset | Networks whose `X-Forwarded-For` is believed (e.g. the ingress controller). |
+| config.maxDevicesPerUser | int | `0` | Maximum devices per user, `0` is no limit. |
+| config.enableApiTokens | bool | `false` | Let users create API tokens for scripts. |
+| config.apiTokenMaxLifetime | string/int | `0` | Longest an API token works, e.g. `720h`. `0` is no cap. |
+| config.httpEnabled | bool | server default `true` | Serve the web UI over plain HTTP too. If `false`, adjust the probes to HTTPS. |
+| config.vpn.firewall | string | `iptables` | `iptables`, `nftables` or `none`. Access policies need `nftables`. |
+| config.auth.sessionStore.maxAge | string | `720h` (server default) | Web session lifetime. |
 | config.auth.sessionStore.secure | bool | `false` | Mark the session cookie `Secure` (HTTPS only). Added in wg-access-server v1.1.0. Breaks login if any user reaches the UI over plain HTTP. |
 | secretConfig.config | object | `{}` | Secret config overlay merged on top of `config`. |
 | secretConfig.existingSecret | string | `""` | Use an existing secret for secret config overlay. |

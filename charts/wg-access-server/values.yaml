@@ -7,7 +7,23 @@ config:
   # The external origin of the server, e.g. https://vpn.example.com. This is
   # written into the client configuration files as the Endpoint, so it has to be
   # set to something clients can actually reach.
+  # Since v1.3.0 it also pins the host that passkeys (2FA) are bound to: set it
+  # to the name users type, or passkeys registered via another name stop working.
   # externalHost:
+  # Networks (YAML list of CIDRs or addresses) requests reach the server through,
+  # e.g. the ingress controller. Only from them is X-Forwarded-For believed.
+  # trustedProxies: ["10.0.0.0/8"]
+  # Maximum number of devices a single user may create. 0 means no limit.
+  # Admins are not exempt.
+  maxDevicesPerUser: 0
+  # Let users create API tokens for scripts (wg-access-server >= v1.3.0).
+  enableApiTokens: false
+  # Longest an API token works, counted from its creation, e.g. 720h (at least
+  # 1m). 0 means no cap.
+  apiTokenMaxLifetime: 0
+  # Serve the web UI over plain HTTP on port 8000 as well (default true). Client
+  # configs contain private keys, so only disable with HTTPS on (see https.*).
+  # httpEnabled: true
   # Collect device metadata logging (last handshake, RX/TX). Required for "Last seen" in the UI.
   enableMetadata: false
   # Expose device-level Prometheus metrics on /metrics. Requires enableMetadata to be effective.
@@ -49,7 +65,11 @@ config:
     allowedIPs:
       - "0.0.0.0/0"
       - "::/0"
-    # optionally disable automatic iptable configuration
+    # How the forwarding rules are set up: iptables, nftables or none
+    # (wg-access-server >= v1.3.0). nftables is required for access policies
+    # (vpn.policies); the image ships nft and NET_ADMIN is sufficient.
+    firewall: iptables
+    # Deprecated since v1.3.0, the same as `firewall: none`.
     disableIPTables: false
   clientConfig:
     dnsServers: []
@@ -60,7 +80,9 @@ config:
     # silently ignored.
     PersistentKeepalive: 0
   https:
-    # Enable HTTPS for the web UI
+    # Enable HTTPS for the web UI. The probes below use plain HTTP on port 8000,
+    # so if you set config.httpEnabled: false (HTTPS only), also point them at
+    # the HTTPS port with scheme HTTPS.
     enabled: false
     port: 8443
     # Listen host for the HTTPS server. Empty means all hosts.
@@ -85,6 +107,9 @@ config:
   # is merged over this block at startup.
   # auth:
   #   sessionStore:
+  #     # How long a web session stays valid (default 720h). This is also how
+  #     # long access revoked at the identity provider takes to take effect.
+  #     maxAge: 720h
   #     # Mark the session cookie as Secure so browsers only send it over HTTPS.
   #     # Added in wg-access-server v1.1.0, defaults to false. The web UI is also
   #     # served over plain HTTP on port 8000, so only enable this when every user
